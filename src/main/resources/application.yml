@@ -1,0 +1,38 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: gts-hrm-service
+
+  datasource:
+    url: jdbc:sqlserver://localhost:1433;databaseName=GTS_HRM;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: 123
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Tự động map schema Entity với DB
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.SQLServerDialect
+
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+# Cấu hình Gemini AI API Key
+gemini:
+  api:
+    key: ${GEMINI_API_KEY:AQ.Ab8RN6LbgJe8TQz2kl8upjAyJyVu5xGqbJd6JBFt8pzE1OngVA}
+    model: gemini-3.5-flash-lite

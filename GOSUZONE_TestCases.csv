@@ -1,0 +1,26 @@
+﻿Test ID,Phân hệ,Tên kịch bản (Scenario),Mức nghiêm trọng (Severity),Tiền điều kiện,Các bước thực hiện,Kết quả mong đợi,Kết quả thực tế (Actual Result),Trạng thái (Pass/Fail)
+BUG_CRIT_01,Build PC (Nghiệp vụ),Chặn đặt hàng khi cấu hình bị XUNG ĐỘT KHÔNG TƯƠNG THÍCH,CRITICAL (Nghiêm trọng),Trang /build-pc,"1. Bỏ tích chọn ""Chỉ hiện linh kiện tương thích""
+2. Chọn CPU Intel LGA 1700 (i5-14400F)
+3. Chọn Mainboard AMD AM5 (B650M)
+4. Bấm ""Thêm vào giỏ"" hoặc ""Đặt cấu hình này""","Phải disable nút hoặc hiện popup chặn, tuyệt đối không cho đặt hàng bộ PC không tương thích vật lý","LỖI NGHIÊM TRỌNG: Dù hệ thống hiện cảnh báo đỏ ""❌ Socket CPU – Mainboard"", nút ""Đặt cấu hình này"" và ""Thêm vào giỏ"" VẪN BẤM ĐƯỢC! Khách hàng vẫn tiến hành checkout và đặt mua thành công bộ máy lỗi!",FAIL
+BUG_HIGH_01,Responsive Mobile,Hiển thị thanh menu điều hướng trên thiết bị di động (Mobile <768px),HIGH (Cao),Mở trang web trên viewport 375x667,"1. Xem thanh Header trên điện thoại
+2. Tìm cách chuyển đến trang Máy bộ, Linh kiện, Livestream",Phải có menu Hamburger (3 gạch) để mở ngăn kéo (Drawer) điều hướng,"LỖI CAO: Thanh menu ẩn sạch các liên kết điều hướng nhưng KHÔNG CÓ NÚT MENU HAMBURGER! Khách vào bằng điện thoại bị kẹt, không thể chuyển trang từ Header!",FAIL
+BUG_HIGH_02,Responsive Mobile,"Giao diện các trang con (/build-pc, /gio-hang, /danh-muc/*) trên mobile",HIGH (Cao),Mở bằng mobile viewport 375px,"1. Truy cập /build-pc và /gio-hang
+2. Kiểm tra hiển thị","Layout phải co giãn dọc (responsive), không bị tràn ngang","LỖI CAO: Các trang con bị gán cứng chiều rộng cố định (width: 1000px). Màn hình 375px chỉ nhìn thấy 35% bên trái, khách phải cuộn ngang mệt mỏi để xem giá và nút đặt hàng!",FAIL
+BUG_MED_01,Build PC (Nghiệp vụ),Chặn đặt bộ máy khi chỉ chọn 1 linh kiện duy nhất,MEDIUM (Vừa),Trang /build-pc,"1. Chỉ chọn duy nhất 1 linh kiện (CPU)
+2. Bỏ trống toàn bộ Main, RAM, Nguồn, Vỏ
+3. Bấm ""Đặt cấu hình này""","Phải yêu cầu tối thiểu các linh kiện cốt lõi (CPU, Main, RAM, Nguồn) mới cho đặt dưới dạng ""Build PC trọn bộ""","Chỉ cần chọn 1 linh kiện là nút ""Đặt cấu hình này"" mở khoá ngay, cho phép đẩy sang giỏ hàng dưới dạng bộ máy build!",FAIL
+BUG_LOW_01,Giỏ hàng (Boundary),Giới hạn số lượng sản phẩm tối đa trong giỏ hàng,LOW (Thấp),Trang /gio-hang,"1. Nhập số lượng 999,999,999 vào ô số lượng
+2. Kiểm tra tổng tiền",Có giới hạn max (VD: tối đa 99) hoặc cảnh báo vượt tồn kho,"Không giới hạn trên: Cho phép nhập 999,999,999 sản phẩm, tổng tiền nhảy vọt lên 3.25 triệu tỷ VNĐ mà form vẫn cho gửi đơn!",FAIL
+BUG_LOW_02,Build PC (UI),Hiển thị thông số chi tiết của linh kiện đã chọn,LOW (Thấp),Trang /build-pc trên Desktop,"1. Chọn 1 linh kiện bất kỳ
+2. Quan sát ô select dropdown",Text mô tả hiển thị ngay ngắn bên dưới ô chọn,Lỗi CSS: Text thông số và tag linh kiện bị đè/chèn lên viền ô select dropdown.,FAIL
+BUG_LOW_03,Trang lỗi (404 UI),Hiển thị trang 404 khi truy cập sản phẩm không tồn tại,LOW (Thấp),Truy cập /san-pham/SKU_KHONG_TON_TAI,Trang 404 đồng bộ theme tối (dark theme),Lỗi giao diện: Hiển thị một khung hộp trắng xóa mặc định của Next.js kẹp giữa header và footer màu đen.,FAIL
+SEC_PASS_01,Bảo mật (XSS),Chống tiêm mã độc XSS vào Form Đặt hàng,SECURITY,Trang checkout /gio-hang,"1. Nhập Họ tên: <b style=""color:red"">XSS_NAME</b>
+2. Nhập Ghi chú: <script>alert(1)</script><img src=x onerror=alert(1)>
+3. Gửi đơn hàng","Mã HTML/script bị mã hoá thành text thô, không thực thi script","AN TOÀN: React đã escape toàn bộ ký tự đặc biệt thành text an toàn (&lt;b...&gt;), 0 script nào bị kích hoạt.",PASS
+SEC_PASS_02,Bảo mật (URL Param),Chống lỗi khi truyền tham số URL rác vào cấu hình Build PC,SECURITY,"URL /build-pc?cfg=INVALID_ID_99999,XSS_<script>","1. Gõ URL có param độc hại/rác
+2. Kiểm tra trang web","Không sập trắng trang, không báo lỗi 500 unhandled","AN TOÀN: Hệ thống tự loại bỏ các SKU không hợp lệ, không gây sập ứng dụng.",PASS
+VAL_PASS_01,Validation Giỏ hàng,"Chặn đặt hàng khi Giỏ hàng Rỗng (0 sản phẩm, 0đ)",VALIDATION,Trang /gio-hang khi giỏ trống,"1. Xoá hết sản phẩm trong giỏ
+2. Tìm form đặt hàng",Ẩn form đặt hàng hoặc chặn submit đơn rỗng,"CHÍNH XÁC: Khi giỏ trống, form đặt hàng bị ẩn hoàn toàn, chỉ hiện thông báo ""Giỏ hàng trống"" và nút quay lại trang chủ.",PASS
+VAL_PASS_02,Validation Số lượng,"Xử lý số âm, số 0 và chữ cái ở ô số lượng",VALIDATION,Trang /gio-hang,"1. Nhập số âm (-1, -5)
+2. Nhập chữ abc",Tự động reset về số lượng hợp lệ tối thiểu là 1,CHÍNH XÁC: Hệ thống tự động ép (clamp) các giá trị âm hoặc chữ cái trở lại số 1.,PASS
